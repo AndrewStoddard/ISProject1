@@ -61,11 +61,11 @@ public class InputParser {
         } catch (Exception e) {
             throw new IllegalArgumentException("Parse error on line 1.");
         }
-        this.map = new int[this.mapHeight][this.mapWidth];
+        this.map = new int[this.mapWidth][this.mapHeight];
 
         List<String> rows = Arrays.asList(Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
-        Collections.reverse(rows);
-        this.parseRows(rows);
+        //Collections.reverse(rows);
+        this.parse(rows);
     }
 
     private void parseRows(List<String> rows) {
@@ -96,6 +96,27 @@ public class InputParser {
         if (this.locationsOfIntrest.isEmpty()) {
             throw new IllegalArgumentException("No LOIs were found");
         }
+    }
+    
+    private void parse(List<String> rows) {
+    	int yValue = 0;
+    	for (String row : rows) {
+    		String[] split = row.split(",");
+    		
+    		for (int i = 0; i < split.length; i++) {
+    			if(split[i].equals("Start")) {
+    				this.start = new Point2D.Double(i, yValue);
+    				this.map[i][yValue] = 0;
+    			} else if (split[i].contains("LOI")) {
+    				this.locationsOfIntrest.add(new Point2D.Double(i, yValue));
+    				this.map[i][yValue] = Integer.parseInt(split[i].replace("LOI+", ""));
+    			} else {
+    				this.map[i][yValue] = Integer.parseInt(split[i]);
+    			}
+    			
+    		}
+    		yValue++;
+    	}
     }
 
     /**

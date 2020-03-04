@@ -18,12 +18,14 @@ public class Main {
         System.out.println("Dim: " + inputParser.getWidth() + " x " + inputParser.getHeight());
         System.out.println("Start: " + inputParser.getStartPoint().getX() + ", " + inputParser.getStartPoint().getY());
         System.out.println("LOIs: " + inputParser.getLocationsOfIntrest().get(0).getX() + ", " + inputParser.getLocationsOfIntrest().get(0).getY());
-
-        for (int[] row : inputParser.getMap()) {
-            for (int value : row) {
-                System.out.print(value + " ");
-            }
-            System.out.println("");
+        System.out.println("Start Val: " + inputParser.getMap()[0][0]);
+       
+        int[][] table = inputParser.getMap();
+        for (int i = inputParser.getHeight() - 1; i >= 0; i--) {
+        	for (int j = 0; j < inputParser.getWidth(); j++) {
+        		System.out.print(table[i][j] + " ");
+        	}
+        	System.out.println("");
         }
     }
 }

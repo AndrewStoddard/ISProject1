@@ -52,7 +52,7 @@ public class InputParser {
                     String currentRowValue = rowValues[j];
                     if (currentRowValue.equals("Start")) {
                         this.start = new Point2D.Double(i, j);
-                        this.map[i][j] = 0;
+                        this.map[i][j] = 100;
                     } else if (currentRowValue.contains("LOI")) {
                         this.LOIs.add(new Point2D.Double(i, j));
                         this.map[i][j] = Integer.parseInt(currentRowValue.replace("LOI+", ""));

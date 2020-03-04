@@ -5,6 +5,8 @@ package edu.westga.cs3270.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+
 
 /**
  * @author Group H
@@ -17,8 +19,15 @@ public class Agent {
 		this.qTable = new HashMap<State, Map<Action, Double>>();
 	}
 	
-	public void initializeQTable() {
+	public void initializeQTable(Set<State> stateSet, Set<Action> actionSet) {
 		//Add every state to hash map. For each one, make the map with each action that a state can perform and set the value to 0
+		for (State state : stateSet) {
+			for (Action action : actionSet) {
+				Map<Action, Double> newMap = new HashMap<Action, Double>();
+				newMap.put(action, 0.0);
+				this.qTable.put(state, newMap);
+			}
+		}
 	}
 	
 	public void adjustValue(State state, Action action, double value) {

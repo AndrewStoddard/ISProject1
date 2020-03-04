@@ -27,11 +27,11 @@ public class State {
 	 * @param yCoor the y coordinate of the state
 	 */
 	public State(int xCoor, int yCoor, int reward) {
-		if (xCoor <= 0) {
+		if (xCoor < 0) {
 			throw new IllegalArgumentException("xCoor cannot be less than or equal to 0");
 		}
 
-		if (yCoor <= 0) {
+		if (yCoor < 0) {
 			throw new IllegalArgumentException("yCoor cannot be less than or equal to 0");
 		}
 		this.xCoor = xCoor;
@@ -39,6 +39,11 @@ public class State {
 		this.reward = reward;
 		this.actions = new ArrayList<Action>();
 	}
+	
+	public void addPossibleAction(Action action) {
+		this.actions.add(action);
+	}
+	
 
 
 	/**
@@ -50,6 +55,16 @@ public class State {
 	public int getxCoor() {
 		return this.xCoor;
 	}
+	
+	/**
+	 * Gets the Actions
+	 * @preconditions none
+	 * @postconditions none
+	 * @return the action list
+	 */
+	public List<Action> getActions() {
+		return this.actions;
+	}
 
 
 	/**
@@ -60,5 +75,13 @@ public class State {
 	 */
 	public int getyCoor() {
 		return this.yCoor;
+	}
+
+
+	/**
+	 * @return the reward
+	 */
+	public int getReward() {
+		return reward;
 	}
 }

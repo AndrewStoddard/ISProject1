@@ -9,9 +9,11 @@ import edu.westga.cs3270.model.*;
 public class Main {
 	
 	private static final int RUN_MODE = 1;
+	public static final int EPISODE_COUNT = 1;
 	public static double epsilon = 0.0;
 	public static double gamma = 0.0;
 	public static double alpha = 0.0;
+	
 	
     public static void main(String[] args) {
     	setHyperParameters();

@@ -14,10 +14,13 @@ import java.util.Set;
 import edu.westga.cs3270.Main;
 
 /**
- * @author Group H
+ * The Class Agent.
  *
+ * @author Group H
  */
 public class Agent {
+	
+	/** The q table. */
 	private Map<State, Map<Action, Double>> qTable;
 	private State currentState;
 	private Random rand;
@@ -154,7 +157,7 @@ public class Agent {
 	 * @return true if exploit false if explore
 	 */
 	private boolean exploreOrExploit() {
-		return Math.random() > Main.epsilon;
+		return Math.random() > Main.getEpsilon();
 	}
 
 	private Action getDirectionToMove() {
@@ -185,8 +188,8 @@ public class Agent {
 
 	private void updateQValue(Action action, State oldState) {
 		Double newQValue = this.qTable.get(oldState).get(action);
-		newQValue = (1 - Main.alpha) * newQValue
-				+ Main.alpha * (this.currentState.getReward() + Main.gamma * this.maxQValue);
+		newQValue = (1 - Main.getAlpha()) * newQValue
+				+ Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue);
 
 		this.qTable.get(oldState).replace(action, newQValue);
 	}

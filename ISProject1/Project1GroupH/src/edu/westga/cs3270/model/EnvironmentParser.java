@@ -14,7 +14,7 @@ import java.util.Scanner;
  * 
  * @author Group 1
  */
-public class InputParser {
+public class EnvironmentParser {
 
     private String input;
     private int mapWidth;
@@ -28,7 +28,7 @@ public class InputParser {
      * 
      * @param file The input file.
      */
-    public InputParser(File file) {
+    public EnvironmentParser(File file) {
         this.locationsOfIntrest = new ArrayList<Point2D>();
         try (Scanner scanner = new Scanner(file, "UTF-8")) {
             this.input = scanner.useDelimiter("\\A").next();
@@ -43,7 +43,7 @@ public class InputParser {
      * 
      * @param input The input string.
      */
-    public InputParser(String input) {
+    public EnvironmentParser(String input) {
         this.locationsOfIntrest = new ArrayList<Point2D>();
         this.input = input;
         this.parseInput();
@@ -65,26 +65,26 @@ public class InputParser {
 
         List<String> rows = Arrays.asList(Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
         Collections.reverse(rows);
-        this.parse(rows);
+        this.parseRows(rows);
     }
-
+    
     private void parseRows(List<String> rows) {
         int lineNumber = -1;
         try {
-            for (int i = 0; i < rows.size(); i++) {
-                lineNumber = i + 1;
-                String[] rowValues = rows.get(i).split(",");
-                for (int j = 0; j < rowValues.length; j++) {
-                    String currentRowValue = rowValues[j];
-                    if (currentRowValue.equals("Start")) {
-                        this.start = new Point2D.Double(i, j);
-                        this.map[i][j] = 100;
-                    } else if (currentRowValue.contains("LOI")) {
-                        this.locationsOfIntrest.add(new Point2D.Double(i, j));
-                        this.map[i][j] = Integer.parseInt(currentRowValue.replace("LOI+", ""));
+            for (int y = 0; y < rows.size(); y++) {
+                String[] split = rows.get(y).split(",");
+                
+                for (int x = 0; x < split.length; x++) {
+                    if (split[x].equals("Start")) {
+                        this.start = new Point2D.Double(x, y);
+                        this.map[x][y] = 0;
+                    } else if (split[x].contains("LOI")) {
+                        this.locationsOfIntrest.add(new Point2D.Double(x, y));
+                        this.map[x][y] = Integer.parseInt(split[x].replace("LOI+", ""));
                     } else {
-                        this.map[i][j] = Integer.parseInt(currentRowValue);
+                        this.map[x][y] = Integer.parseInt(split[x]);
                     }
+                    
                 }
             }
         } catch (Exception e) {
@@ -96,27 +96,6 @@ public class InputParser {
         if (this.locationsOfIntrest.isEmpty()) {
             throw new IllegalArgumentException("No LOIs were found");
         }
-    }
-    
-    private void parse(List<String> rows) {
-    	int yValue = 0;
-    	for (String row : rows) {
-    		String[] split = row.split(",");
-    		
-    		for (int i = 0; i < split.length; i++) {
-    			if(split[i].equals("Start")) {
-    				this.start = new Point2D.Double(i, yValue);
-    				this.map[i][yValue] = 0;
-    			} else if (split[i].contains("LOI")) {
-    				this.locationsOfIntrest.add(new Point2D.Double(i, yValue));
-    				this.map[i][yValue] = Integer.parseInt(split[i].replace("LOI+", ""));
-    			} else {
-    				this.map[i][yValue] = Integer.parseInt(split[i]);
-    			}
-    			
-    		}
-    		yValue++;
-    	}
     }
 
     /**

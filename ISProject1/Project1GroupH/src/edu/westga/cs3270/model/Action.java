@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.westga.cs3270.model;
 
 /**

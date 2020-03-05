@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.westga.cs3270.model;
 
 import java.awt.geom.Point2D;
@@ -15,7 +12,7 @@ import java.util.Set;
  */
 public class StateGenerator {
 	private List<State> states;
-	private InputParser parser;
+	private EnvironmentParser parser;
 	
 	
 	/**
@@ -25,7 +22,7 @@ public class StateGenerator {
 	 * 
 	 * @param parser the parser object
 	 */
-	public StateGenerator(InputParser parser) {
+	public StateGenerator(EnvironmentParser parser) {
 		if (parser == null) {
 			throw new IllegalArgumentException("Cannot have a null parser");
 		}

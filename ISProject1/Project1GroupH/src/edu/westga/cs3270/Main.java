@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
-import edu.westga.cs3270.model.InputParser;
+import edu.westga.cs3270.model.EnvironmentParser;
 import edu.westga.cs3270.model.State;
 import edu.westga.cs3270.model.StateGenerator;
 
@@ -33,11 +33,11 @@ public class Main {
         + "0,0,0,0,0,0,-150,0" + System.lineSeparator()
         + "0,-100,0,0,0,-120,0,0" + System.lineSeparator()
         + "Start,-100,-100,0,-100,-100,-100,LOI+100";
-        InputParser inputParser = new InputParser(input);
+        EnvironmentParser parser = new EnvironmentParser(input);
         
-        StateGenerator sg = new StateGenerator(inputParser);
+        StateGenerator sg = new StateGenerator(parser);
 
-        Agent agent = new Agent(sg.getStartState(inputParser.getStartPoint()), sg.getLOIs(inputParser.getLocationsOfIntrest()), sg.getStates());
+        Agent agent = new Agent(sg.getStartState(parser.getStartPoint()), sg.getLOIs(parser.getLocationsOfIntrest()), sg.getStates());
         
         agent.run(50000);
         //List<State> states = agent.getResultingList();

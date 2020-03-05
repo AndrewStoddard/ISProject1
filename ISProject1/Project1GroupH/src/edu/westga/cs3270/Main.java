@@ -1,20 +1,23 @@
 package edu.westga.cs3270;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
 import edu.westga.cs3270.model.EnvironmentParser;
 import edu.westga.cs3270.model.State;
 import edu.westga.cs3270.model.StateGenerator;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * The Main Class.
  *
  * @author Group H
  */
-public class Main {
+public class Main extends Application {
 
 	/** The Constant RUN_MODE. */
 	private static final int RUN_MODE = 1;
@@ -25,34 +28,8 @@ public class Main {
 	/** The epsilon. */
 	private static double epsilon = 0.0;
 	
-
     public static void main(String[] args) throws InterruptedException {
-    	setHyperParameters();
-        String input = "8x4" + System.lineSeparator()
-        + "0,0,-100,0,0,0,0,0" + System.lineSeparator()
-        + "0,0,0,0,0,0,-150,0" + System.lineSeparator()
-        + "0,-100,0,0,0,-120,0,0" + System.lineSeparator()
-        + "Start,-100,-100,0,-100,-100,-100,LOI+100";
-        EnvironmentParser parser = new EnvironmentParser(input);
-        
-        StateGenerator sg = new StateGenerator(parser);
-
-        Agent agent = new Agent(sg.getStartState(parser.getStartPoint()), sg.getLOIs(parser.getLocationsOfIntrest()), sg.getStates());
-        
-        agent.run(50000);
-        //List<State> states = agent.getResultingList();
-        Map<State, Map<Action, Double>> qTable = agent.getQTable();
-        
-        for (Entry<State, Map<Action, Double>> entry : qTable.entrySet()) {
-        	System.out.println("State : " + entry.getKey().getxCoor() + " : " + entry.getKey().getyCoor() + " : ");
-        	for (Entry<Action, Double> entry2 : entry.getValue().entrySet()) {
-        		System.out.print("Action : " + entry2.getKey() + " Value : " + entry.getValue().get(entry2.getKey()) + " | ");
-        	}
-        	System.out.println();
-        	System.out.println();
-        }
-        
-        
+		Main.launch(args);
     }
     
     private static void setHyperParameters() {
@@ -113,5 +90,31 @@ public class Main {
 		return alpha;
 	}
 
-	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		setHyperParameters();
+        String input = "8x4" + System.lineSeparator()
+        + "0,0,-100,0,0,0,0,0" + System.lineSeparator()
+        + "0,0,0,0,0,0,-150,0" + System.lineSeparator()
+        + "0,-100,0,0,0,-120,0,0" + System.lineSeparator()
+        + "Start,-100,-100,0,-100,-100,-100,LOI+100";
+        EnvironmentParser parser = new EnvironmentParser(input);
+        
+        StateGenerator sg = new StateGenerator(parser);
+
+        Agent agent = new Agent(sg.getStartState(parser.getStartPoint()), sg.getLOIs(parser.getLocationsOfIntrest()), sg.getStates());
+        
+        //agent.run(50000);
+        //List<State> states = agent.getResultingList();
+        Map<State, Map<Action, Double>> qTable = agent.getQTable();
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource("view/main.fxml"));
+		loader.load();
+		
+		Scene scene = new Scene(loader.getRoot());
+		primaryStage.setTitle("main");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
 }

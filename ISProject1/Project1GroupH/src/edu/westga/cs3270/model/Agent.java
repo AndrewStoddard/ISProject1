@@ -48,7 +48,7 @@ public class Agent {
 		int episodes = 0;
 		
 		for (int i = 0; i < episodeCount; i++) {
-			System.out.println("Episode: " + episodes);
+			
 			int moves = 0;
 			
 			this.currentState = this.startState;
@@ -58,14 +58,24 @@ public class Agent {
 			while(true) {
 				moves++;
 				this.move();
-				if (this.isLOI()) {
+				if (this.isLOI()) {					
+					System.out.println("Goal");
+
 					break;
 				}
 				if (this.isDead()) {
+					System.out.println("Die");
 					break;
 				}
 			}
-			
+			System.out.println("Episode: " + episodes);
+			for(State state : this.resultingList) {
+				System.out.print("State: " + state.getxCoor() + " : " + state.getyCoor() + " : " + state.getReward() + " ; Actions : ");
+				for (Action action : state.getActions()) {
+					System.out.print(action + ", ");
+				}
+				System.out.println();
+			}
 			
 			System.out.println("Moves: " + moves);
 			episodes++;
@@ -127,7 +137,6 @@ public class Agent {
 		State newState = null;
 		int xCoor = this.currentState.getxCoor();
 		int yCoor = this.currentState.getyCoor();
-		System.out.println("Old = " + xCoor + " : " + yCoor + " Action = " + action);
 		switch (action) {
 		case NORTH:
 			yCoor++;
@@ -148,7 +157,6 @@ public class Agent {
 				newState = entry.getKey();
 			}
 		}
-		System.out.println("New = " + xCoor + " : " + yCoor + " Action = " + action);
 		return newState;
 	}
 

@@ -33,14 +33,7 @@ public class StateGenerator {
 		this.states = new ArrayList<State>();
 		this.generateStates();
 		
-		 for(State state : states) {
-				System.out.print("State: " + state.getxCoor() + " : " + state.getyCoor() + " : " + state.getReward() + " ; Actions : ");
-				for (Action action : state.getActions()) {
-					System.out.print(action + ", ");
-				}
-				System.out.println();
-			}
-		
+	
 	}
 	
 	public Set<State> getLOIs(List<Point2D> lois) {
@@ -78,8 +71,8 @@ public class StateGenerator {
 	
 	private void generateStates() {
 		int[][] map = this.parser.getMap();
-		for (int i = 0; i < this.parser.getMapHeight(); i++) {
-			for(int j = 0; j < this.parser.getMapWidth(); j++) {
+		for (int i = 0; i < this.parser.getMapWidth(); i++) {
+			for(int j = 0; j < this.parser.getMapHeight(); j++) {
 				State state = new State(i, j, map[i][j]);
 				if (state.getyCoor() != 0) {
 					state.addPossibleAction(Action.SOUTH);

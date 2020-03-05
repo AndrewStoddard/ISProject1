@@ -64,7 +64,7 @@ public class InputParser {
         this.map = new int[this.mapWidth][this.mapHeight];
 
         List<String> rows = Arrays.asList(Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
-        //Collections.reverse(rows);
+        Collections.reverse(rows);
         this.parse(rows);
     }
 

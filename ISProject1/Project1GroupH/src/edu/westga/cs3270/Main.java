@@ -40,16 +40,10 @@ public class Main {
 
         Agent agent = new Agent(sg.getStartState(inputParser.getStartPoint()), sg.getLOIs(inputParser.getLocationsOfIntrest()), sg.getStates());
         
-        agent.run(100);
+        agent.run(1000);
         List<State> states = agent.getResultingList();
         
-        for(State state : states) {
-			System.out.print("State: " + state.getxCoor() + " : " + state.getyCoor() + " : " + state.getReward() + " ; Actions : ");
-			for (Action action : state.getActions()) {
-				System.out.print(action + ", ");
-			}
-			System.out.println();
-		}
+        
         
     }
     

@@ -1,13 +1,12 @@
 package edu.westga.cs3270;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
 import edu.westga.cs3270.model.InputParser;
 import edu.westga.cs3270.model.State;
-import edu.westga.cs3270.model.InputParser;
 import edu.westga.cs3270.model.StateGenerator;
 
 /**
@@ -41,8 +40,17 @@ public class Main {
         Agent agent = new Agent(sg.getStartState(inputParser.getStartPoint()), sg.getLOIs(inputParser.getLocationsOfIntrest()), sg.getStates());
         
         agent.run(1000);
-        List<State> states = agent.getResultingList();
+        //List<State> states = agent.getResultingList();
+        Map<State, Map<Action, Double>> qTable = agent.getQTable();
         
+        for (Entry<State, Map<Action, Double>> entry : qTable.entrySet()) {
+        	System.out.println("State : " + entry.getKey().getxCoor() + " : " + entry.getKey().getyCoor() + " : ");
+        	for (Entry<Action, Double> entry2 : entry.getValue().entrySet()) {
+        		System.out.print("Action : " + entry2.getKey() + " Value : " + entry.getValue().get(entry2.getKey()) + " | ");
+        	}
+        	System.out.println();
+        	System.out.println();
+        }
         
         
     }

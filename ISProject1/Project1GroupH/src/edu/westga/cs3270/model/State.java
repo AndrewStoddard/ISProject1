@@ -46,6 +46,9 @@ public class State {
 	
 
 
+	public void setReward(int reward) {
+		this.reward = reward;
+	}
 	/**
 	 * Gets the xCoor
 	 * @preconditions none

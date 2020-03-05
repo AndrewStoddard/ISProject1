@@ -48,7 +48,8 @@ public class Agent {
 		int episodes = 0;
 		
 		for (int i = 0; i < episodeCount; i++) {
-			
+			System.out.println();
+
 			int moves = 0;
 			
 			this.currentState = this.startState;
@@ -76,6 +77,7 @@ public class Agent {
 				}
 				System.out.println();
 			}
+			System.out.println("Final State : " + this.currentState.getxCoor() + " : " + this.currentState.getyCoor() + " : " + this.currentState.getReward());
 			
 			System.out.println("Moves: " + moves);
 			episodes++;
@@ -88,6 +90,10 @@ public class Agent {
 	
 	public List<State> getResultingList() {
 		return this.resultingList;
+	}
+	
+	public Map<State, Map<Action, Double>> getQTable() {
+		return this.qTable;
 	}
 
 	public void initializeQTable(List<State> states) {
@@ -157,6 +163,24 @@ public class Agent {
 				newState = entry.getKey();
 			}
 		}
+		//Testing purposes
+		if (newState == null) {
+			
+			for(State state : this.resultingList) {
+				System.out.print("State: " + state.getxCoor() + " : " + state.getyCoor() + " : " + state.getReward() + " ; Actions : ");
+				for (Action actions : state.getActions()) {
+					System.out.print(actions + ", ");
+				}
+				System.out.println();
+			}
+			
+			
+			System.out.print("Final State : " + this.currentState.getxCoor() + " : " + this.currentState.getyCoor() + " : " + this.currentState.getReward() + " : ");
+			for (Action actions : this.currentState.getActions()) {
+				System.out.print(actions + ", ");
+			}
+			System.out.println("Null State : " + xCoor + " : " + yCoor);
+		}
 		return newState;
 	}
 
@@ -165,7 +189,7 @@ public class Agent {
 	 * @return true if exploit false if explore
 	 */
 	private boolean exploreOrExploit() {
-		return Math.random() > Main.getEpsilon();
+		return (Math.random() > Main.getEpsilon());
 	}
 
 	private Action getDirectionToMove() {
@@ -177,7 +201,7 @@ public class Agent {
 				if (entry.getValue() > this.maxQValue) {
 					this.maxQValue = entry.getValue();
 					result = entry.getKey();
-					break;
+					
 				}
 
 			}
@@ -196,9 +220,13 @@ public class Agent {
 
 	private void updateQValue(Action action, State oldState) {
 		Double newQValue = this.qTable.get(oldState).get(action);
-		newQValue = (1 - Main.getAlpha()) * newQValue
-				+ Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue);
-
+		//System.out.println("Curr Q Value : " + newQValue);
+//		newQValue = (1 - Main.getAlpha()) * newQValue
+//				+ Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue);
+//		
+		
+		newQValue = newQValue + Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue - newQValue);
+		//System.out.println("MaxQ: " + this.maxQValue + " | New Q : " + newQValue);
 		this.qTable.get(oldState).replace(action, newQValue);
 	}
 

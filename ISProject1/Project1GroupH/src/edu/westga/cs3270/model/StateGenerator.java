@@ -83,8 +83,11 @@ public class StateGenerator {
 				if (state.getxCoor() != 0) {
 					state.addPossibleAction(Action.WEST);
 				}
-				if (state.getxCoor() != this.parser.getMapWidth()) {
+				if (state.getxCoor() != this.parser.getMapWidth() - 1) {
 					state.addPossibleAction(Action.EAST);
+				}
+				if (state.getReward() == 0) { 
+					state.setReward(state.getReward() + 10);
 				}
 				this.states.add(state);
 				

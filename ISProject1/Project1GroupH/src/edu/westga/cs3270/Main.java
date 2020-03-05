@@ -39,7 +39,7 @@ public class Main {
 
         Agent agent = new Agent(sg.getStartState(inputParser.getStartPoint()), sg.getLOIs(inputParser.getLocationsOfIntrest()), sg.getStates());
         
-        agent.run(1000);
+        agent.run(50000);
         //List<State> states = agent.getResultingList();
         Map<State, Map<Action, Double>> qTable = agent.getQTable();
         

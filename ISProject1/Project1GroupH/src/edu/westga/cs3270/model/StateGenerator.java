@@ -87,7 +87,7 @@ public class StateGenerator {
 					state.addPossibleAction(Action.EAST);
 				}
 				if (state.getReward() == 0) { 
-					state.setReward(state.getReward() + 10);
+					state.setReward(state.getReward());
 				}
 				this.states.add(state);
 				

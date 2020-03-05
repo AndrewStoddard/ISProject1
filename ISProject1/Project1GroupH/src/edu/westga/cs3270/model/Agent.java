@@ -24,7 +24,6 @@ public class Agent {
 	private Map<State, Map<Action, Double>> qTable;
 	private State currentState;
 	private Random rand;
-	private Double maxQValue;
 	private Set<State> locationsOfInterest;
 	private List<State> resultingList;
 	private int health;
@@ -37,7 +36,6 @@ public class Agent {
 		this.startState = startState;
 		
 		this.rand = new Random();
-		this.maxQValue = 0.0;
 		this.currentState = startState;
 		
 		this.locationsOfInterest = locationsOfInterest;
@@ -120,6 +118,22 @@ public class Agent {
 
 	}
 	
+	private Double getMaxQValue(State state) {
+		Double qValue = 0.0;
+		boolean first = true;
+		for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
+			if (first) {
+				qValue = entry.getValue();
+				first = false;
+			}
+			if (entry.getValue() > qValue) { 
+				qValue = entry.getValue();
+			}
+		}
+		
+		return qValue;
+	}
+	
 	private boolean isLOI() {
 		boolean result = false;
 		for (State state : this.locationsOfInterest) {
@@ -193,13 +207,13 @@ public class Agent {
 	}
 
 	private Action getDirectionToMove() {
-		this.maxQValue = 0.0;
+		Double qValue = 0.0;
 		Action result = null;
 
 		if (this.exploreOrExploit()) {
 			for (Entry<Action, Double> entry : this.qTable.get(this.currentState).entrySet()) {
-				if (entry.getValue() > this.maxQValue) {
-					this.maxQValue = entry.getValue();
+				if (entry.getValue() > qValue) {
+					qValue = entry.getValue();
 					result = entry.getKey();
 					
 				}
@@ -219,14 +233,10 @@ public class Agent {
 	}
 
 	private void updateQValue(Action action, State oldState) {
-		Double newQValue = this.qTable.get(oldState).get(action);
-		//System.out.println("Curr Q Value : " + newQValue);
-//		newQValue = (1 - Main.getAlpha()) * newQValue
-//				+ Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue);
-//		
+		Double oldQValue = this.qTable.get(oldState).get(action);
 		
-		newQValue = newQValue + Main.getAlpha() * (this.currentState.getReward() + Main.getGamma() * this.maxQValue - newQValue);
-		//System.out.println("MaxQ: " + this.maxQValue + " | New Q : " + newQValue);
+		Double newQValue = ((1 - Main.getAlpha()) * oldQValue) + Main.getAlpha() * (this.currentState.getReward() + Main.getAlpha() * this.getMaxQValue(this.currentState));
+				
 		this.qTable.get(oldState).replace(action, newQValue);
 	}
 

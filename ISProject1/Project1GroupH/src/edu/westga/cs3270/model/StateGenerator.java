@@ -71,21 +71,6 @@ public class StateGenerator {
 		for (int i = 0; i < this.parser.getMapWidth(); i++) {
 			for(int j = 0; j < this.parser.getMapHeight(); j++) {
 				State state = new State(i, j, map[i][j]);
-				if (state.getyCoor() != 0) {
-					state.addPossibleAction(Action.SOUTH);
-				}
-				if (state.getyCoor() != this.parser.getMapHeight() - 1) {
-					state.addPossibleAction(Action.NORTH);
-				}
-				if (state.getxCoor() != 0) {
-					state.addPossibleAction(Action.WEST);
-				}
-				if (state.getxCoor() != this.parser.getMapWidth() - 1) {
-					state.addPossibleAction(Action.EAST);
-				}
-				if (state.getReward() == 0) { 
-					state.setReward(state.getReward());
-				}
 				this.states.add(state);
 				
 			}

@@ -64,17 +64,17 @@ public class EnvironmentParser {
         this.map = new int[this.mapWidth][this.mapHeight];
 
         List<String> rows = Arrays.asList(Arrays.copyOfRange(inputSplit, 1, inputSplit.length));
-        Collections.reverse(rows);
+        //Collections.reverse(rows);
         this.parseRows(rows);
     }
     
     private void parseRows(List<String> rows) {
         int lineNumber = -1;
         try {
-            for (int y = 0; y < rows.size(); y++) {
+            for (int y = rows.size() - 1; y >= 0 ; y--) {
                 String[] split = rows.get(y).split(",");
                 
-                for (int x = 0; x < split.length; x++) {
+                for (int x = split.length - 1; x >= 0; x--) {
                     if (split[x].equals("Start")) {
                         this.start = new Point2D.Double(x, y);
                         this.map[x][y] = 0;

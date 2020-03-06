@@ -74,10 +74,10 @@ public class Environment {
 		int yCoor = currentState.getyCoor();
 		switch (action) {
 		case NORTH:
-			yCoor++;
+			yCoor--;
 			break;
 		case SOUTH:
-			yCoor--;
+			yCoor++;
 			break;
 		case WEST:
 			xCoor--;
@@ -127,10 +127,10 @@ public class Environment {
 		for (int i = 0; i < this.mapWidth; i++) {
 			for (int j = 0; j < this.mapHeight; j++) {
 				if (state.getyCoor() != 0) {
-					actions.add(Action.SOUTH);
+					actions.add(Action.NORTH);
 				}
 				if (state.getyCoor() != this.mapHeight - 1) {
-					actions.add(Action.NORTH);
+					actions.add(Action.SOUTH);
 				}
 				if (state.getxCoor() != 0) {
 					actions.add(Action.WEST);

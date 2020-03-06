@@ -3,9 +3,12 @@
  */
 package edu.westga.cs3270.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Map.Entry;
 import java.util.Random;
 
@@ -38,25 +41,23 @@ public class Agent {
 
 	/**
 	 * 
-	 * @param episodeCount
+	 * 
 	 */
-	public void run(int episodeCount) {
+	public void live() {
 
-		for (int i = 0; i < episodeCount; i++) {
+		this.currentState = this.environment.getStartState();
+		this.health = 50;
 
-			this.currentState = this.environment.getStartState();
-			this.health = 50;
-
-			while (true) {
-				this.move();
-				if (this.environment.isLocationOfInterest(this.currentState)) {
-					break;
-				}
-				if (this.isDead()) {
-					break;
-				}
+		while (true) {
+			this.move();
+			if (this.environment.isLocationOfInterest(this.currentState)) {
+				break;
+			}
+			if (this.isDead()) {
+				break;
 			}
 		}
+
 	}
 
 	/**
@@ -65,6 +66,37 @@ public class Agent {
 	 */
 	public Map<State, Map<Action, Double>> getQTable() {
 		return this.qTable;
+	}
+	
+	public List<State> getBestPath() {
+		List<State> states = new ArrayList<State>();
+		
+		Queue<State> q = new LinkedList<State>();
+		q.add(this.environment.getStartState());
+		while (!q.isEmpty()) {
+			Action bestAction = null;
+			double maxQ = 0.0;
+			State state = q.remove();
+			states.add(state);
+			
+			for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
+				if (bestAction == null) {
+					maxQ = entry.getValue();
+					bestAction = entry.getKey();
+				} else {
+					if (maxQ < entry.getValue()) {
+						maxQ = entry.getValue();
+						bestAction = entry.getKey();
+					}
+				}
+			}
+			if (this.environment.isLocationOfInterest(state) || maxQ < 0.0) {
+				break;
+			}
+			q.add(this.environment.getNewState(state, bestAction));
+			
+		}
+		return states;
 	}
 
 	private void initializeQTable() {

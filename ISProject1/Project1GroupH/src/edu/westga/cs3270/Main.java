@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Timer;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
@@ -45,6 +46,12 @@ public class Main extends Application {
 				+ "0,-100,-100,0,-100,-100,-100,LOI+100";
 		EnvironmentParser parser = new EnvironmentParser(input);
 		Environment env = new Environment(parser);
+		
+		for (int i = 0; i < parser.getMapHeight(); i++) {
+			for(int j = 0; i < parser.getMapWidth(); i++) {
+				System.out.println(parser.getMap()[i][j]);
+			}
+		}
 
 		Agent agent = new Agent(env);
 
@@ -71,42 +78,31 @@ public class Main extends Application {
 		Scene scene = new Scene(grid);
 		primaryStage.setTitle("Test");
 		primaryStage.setScene(scene);
-		beAlive(agent, list).start();
-		
+		// beAlive(agent, list).start();
+
 		primaryStage.show();
+
 		
-	}
+		for (int i = 1; i < EPISODE_COUNT; i++) {
 
-	/**
-	 * The for loop in the thread will change the colors of the squares. I just don't know how to thread.
-	 * @param agent
-	 * @param list
-	 * @return
-	 */
-	public static Thread beAlive(Agent agent, List<Rectangle> list) {
-		return new Thread(() -> {
-			for (int i = 0; i < EPISODE_COUNT; i++) {
-				for (Rectangle rect : list) {
-					rect.setFill(Color.BLACK);
+			agent.live();
 
+		
+		}
+		
+		for (State state : agent.getBestPath()) {
+			for (Rectangle rect : list) {
+				if (GridPane.getColumnIndex(rect) == state.getxCoor()
+						&& GridPane.getRowIndex(rect) == state.getyCoor()) {
+					rect.setFill(Color.WHITE);
 				}
-				agent.live();
-				
-				for (State state : agent.getBestPath()) {
-					for (Rectangle rect : list) {
-						if (GridPane.getColumnIndex(rect) == state.getxCoor()
-								&& GridPane.getRowIndex(rect) == state.getyCoor()) {
-							rect.setFill(Color.WHITE);
-						}
 
-					}
-				}
 			}
-			
-			;
+		}
 
-		});
 	}
+
+
 
 	public static void main(String[] args) throws InterruptedException {
 		Main.launch(args);

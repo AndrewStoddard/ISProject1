@@ -90,7 +90,7 @@ public class Agent {
 					}
 				}
 			}
-			if (this.environment.isLocationOfInterest(state) || maxQ < 0.0) {
+			if (this.environment.isLocationOfInterest(state) || maxQ <= 0.0) {
 				break;
 			}
 			q.add(this.environment.getNewState(state, bestAction));

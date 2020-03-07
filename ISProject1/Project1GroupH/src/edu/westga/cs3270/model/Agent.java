@@ -67,10 +67,10 @@ public class Agent {
 	public Map<State, Map<Action, Double>> getQTable() {
 		return this.qTable;
 	}
-	
+
 	public List<State> getBestPath() {
 		List<State> states = new ArrayList<State>();
-		
+
 		Queue<State> q = new LinkedList<State>();
 		q.add(this.environment.getStartState());
 		while (!q.isEmpty()) {
@@ -78,7 +78,7 @@ public class Agent {
 			double maxQ = 0.0;
 			State state = q.remove();
 			states.add(state);
-			
+
 			for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
 				if (bestAction == null) {
 					maxQ = entry.getValue();
@@ -94,9 +94,33 @@ public class Agent {
 				break;
 			}
 			q.add(this.environment.getNewState(state, bestAction));
-			
+
 		}
 		return states;
+	}
+
+	public String getQValuesAsString(State state) {
+		String north = "";
+		String south = "";
+		String west = "";
+		String east = "";
+
+		for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
+			if (entry.getKey() == Action.NORTH) {
+				north = "North: " + entry.getValue();
+			}
+			if (entry.getKey() == Action.SOUTH) {
+				south = "South: " + entry.getValue();
+			}
+			if (entry.getKey() == Action.WEST) {
+				west = "West: " + entry.getValue();
+			}
+			if (entry.getKey() == Action.EAST) {
+				east = "East: " + entry.getValue();
+			}
+		}
+		
+		return "\t\t\t" + north + "\n\n" + west + " \t\t\t " + east + "\n\n\t\t\t" + south; 
 	}
 
 	private void initializeQTable() {

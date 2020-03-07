@@ -1,11 +1,8 @@
 package edu.westga.cs3270;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Timer;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
@@ -14,11 +11,13 @@ import edu.westga.cs3270.model.EnvironmentParser;
 import edu.westga.cs3270.model.State;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -41,68 +40,80 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 
 		setHyperParameters();
-		String input = "8x4" + System.lineSeparator() + "Start,0,-100,0,0,0,0,0" + System.lineSeparator()
+		String input = "8x4" + System.lineSeparator() + "0,0,-100,0,0,0,0,0" + System.lineSeparator()
 				+ "0,0,0,0,0,0,-150,0" + System.lineSeparator() + "0,-100,0,0,0,-120,0,0" + System.lineSeparator()
-				+ "0,-100,-100,0,-100,-100,-100,LOI+100";
+				+ "Start,-100,-100,0,-100,-100,-100,LOI+100";
 		EnvironmentParser parser = new EnvironmentParser(input);
 		Environment env = new Environment(parser);
-		
-		for (int i = 0; i < parser.getMapHeight(); i++) {
-			for(int j = 0; i < parser.getMapWidth(); i++) {
-				System.out.println(parser.getMap()[i][j]);
-			}
-		}
+
 
 		Agent agent = new Agent(env);
-
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(10, 10, 10, 10));
-		grid.setVgap(8);
-		grid.setHgap(10);
-		List<Rectangle> list = new ArrayList<Rectangle>();
-		for (Entry<State, List<Action>> entry : env.getStateMap().entrySet()) {
-			Rectangle r = new Rectangle();
-			r.setX(50);
-			r.setY(50);
-			r.setWidth(200);
-			r.setHeight(100);
-			r.setArcWidth(20);
-			r.setArcHeight(20);
-			r.setFill(Color.BLACK);
-			list.add(r);
-			GridPane.setConstraints(r, entry.getKey().getxCoor(), entry.getKey().getyCoor());
-		}
-
-		grid.getChildren().addAll(list);
-
-		Scene scene = new Scene(grid);
-		primaryStage.setTitle("Test");
-		primaryStage.setScene(scene);
-		// beAlive(agent, list).start();
-
-		primaryStage.show();
-
-		
 		for (int i = 1; i < EPISODE_COUNT; i++) {
 
 			agent.live();
 
-		
 		}
+
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(20, 20, 20, 20));
+		grid.setVgap(5);
+		grid.setHgap(8);
 		
+		
+		List<StackPane> stackList = new ArrayList<StackPane>();
+		
+		for (Entry<State, List<Action>> entry : env.getStateMap().entrySet()) {
+			StackPane stack = new StackPane();
+						
+			Text text = new Text(agent.getQValuesAsString(entry.getKey()));
+			text.setFill(Color.WHITE);
+			text.setTextAlignment(TextAlignment.CENTER);
+			
+			stackList.add(stack);
+			
+			stack.getChildren().addAll(makeRectangle(Color.BLACK), text);
+			GridPane.setConstraints(stack, entry.getKey().getxCoor(), entry.getKey().getyCoor());
+		}
+
+		grid.getChildren().addAll(stackList);
+
+		Scene scene = new Scene(grid);
+		primaryStage.setTitle("Test");
+		primaryStage.setScene(scene);
+
+		primaryStage.show();
+
+		
+
+		showBestPath(agent, stackList);
+
+
+	}
+
+	private static void showBestPath(Agent agent, List<StackPane> stackList) {
 		for (State state : agent.getBestPath()) {
-			for (Rectangle rect : list) {
-				if (GridPane.getColumnIndex(rect) == state.getxCoor()
-						&& GridPane.getRowIndex(rect) == state.getyCoor()) {
-					rect.setFill(Color.WHITE);
+			for (StackPane steck : stackList) {
+				if (GridPane.getColumnIndex(steck) == state.getxCoor()
+						&& GridPane.getRowIndex(steck) == state.getyCoor()) {
+					steck.getChildren().remove(1);
+					
+					steck.getChildren().addAll(makeRectangle(Color.YELLOW), new Text(agent.getQValuesAsString(state)));
 				}
 
 			}
 		}
-
 	}
 
+	private static Rectangle makeRectangle(Color color) {
+		Rectangle r = new Rectangle();
 
+		r.setWidth(250);
+		r.setHeight(150);
+		r.setArcWidth(20);
+		r.setArcHeight(20);
+		r.setFill(color);
+		return r;
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 		Main.launch(args);

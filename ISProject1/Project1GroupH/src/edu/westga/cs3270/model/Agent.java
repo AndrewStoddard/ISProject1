@@ -29,8 +29,9 @@ public class Agent {
 	private Map<Integer, State> moveList;
 
 	/**
+	 * Creates an agent object 
 	 * 
-	 * @param environment
+	 * @param environment The enviroment the agent interfaces with.
 	 */
 	public Agent(Environment environment) {
 		this.environment = environment;
@@ -44,8 +45,7 @@ public class Agent {
 	}
 
 	/**
-	 * 
-	 * 
+	 * Runs the agent for 1 episode.
 	 */
 	public void live() {
 		this.moveList = new HashMap<Integer, State>();
@@ -69,26 +69,37 @@ public class Agent {
 	}
 
 	/**
+	 * Returns the agent's q-table.
 	 * 
-	 * @return
+	 * @return the agent's q-table.
 	 */
 	public Map<State, Map<Action, Double>> getQTable() {
 		return this.qTable;
 	}
 	
+	/**
+	* Returns the move list
+	* 
+	* @return the move list
+	*/
 	public Map<Integer, State> getMoveList() {
 		return this.moveList;
 	}
 
+	/**
+	 * Returns the best path.
+	 * 
+	 * @return the best path.
+	 */
 	public List<State> getBestPath() {
 		List<State> states = new ArrayList<State>();
 
-		Queue<State> q = new LinkedList<State>();
-		q.add(this.environment.getStartState());
-		while (!q.isEmpty()) {
+		Queue<State> queue = new LinkedList<State>();
+		queue.add(this.environment.getStartState());
+		while (!queue.isEmpty()) {
 			Action bestAction = null;
 			double maxQ = 0.0;
-			State state = q.remove();
+			State state = queue.remove();
 			states.add(state);
 
 			for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
@@ -105,7 +116,7 @@ public class Agent {
 			if (this.environment.isLocationOfInterest(state) || maxQ <= 0.0) {
 				break;
 			}
-			q.add(this.environment.getNewState(state, bestAction));
+			queue.add(this.environment.getNewState(state, bestAction));
 
 		}
 		return states;

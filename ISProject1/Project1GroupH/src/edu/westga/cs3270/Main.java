@@ -2,9 +2,7 @@ package edu.westga.cs3270;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -66,7 +64,7 @@ public class Main extends Application {
 		}
 		grid.getChildren().addAll(stackList);
 		Scene scene = new Scene(grid);
-		primaryStage.setTitle("Best Path After " + Main.episodeCount + "episodes");
+		primaryStage.setTitle("Best Path After " + Main.episodeCount + " episodes");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		showBestPath(agent, stackList);

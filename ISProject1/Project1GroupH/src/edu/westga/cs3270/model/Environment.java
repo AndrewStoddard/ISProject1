@@ -1,6 +1,3 @@
-/**
- * 
- */
 package edu.westga.cs3270.model;
 
 import java.util.ArrayList;
@@ -11,8 +8,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 /**
+ * The Environment Class.
+ * 
  * @author Group H
- *
  */
 public class Environment {
 
@@ -24,6 +22,11 @@ public class Environment {
 	private State startState;
 	private Set<State> locationsOfInterest;
 
+	/**
+	 * Creates an Environment object.
+	 * 
+	 * @param eParser an environmentParser
+	 */
 	public Environment(EnvironmentParser eParser) {
 
 		this.mapHeight = eParser.getMapHeight();
@@ -41,50 +44,59 @@ public class Environment {
 	}
 
 	/**
+	 * Returns the state map.
 	 * 
-	 * @return
+	 * @return the state map.
 	 */
 	public Map<State, List<Action>> getStateMap() {
 		return this.stateMap;
 	}
 
 	/**
-	 * @return the startState
+	 * Returns the start state.
+	 * 
+	 * @return the start state.
 	 */
 	public State getStartState() {
 		return this.startState;
 	}
 
 	/**
-	 * @return the locationsOfInterest
+	 * Returns a set of locations of intrest.
+	 * 
+	 * @return a set of locations of intrest.
 	 */
 	public Set<State> getLocationsOfInterest() {
 		return this.locationsOfInterest;
 	}
 
 	/**
+	 * Returns the state after taking some action at some state.
 	 * 
-	 * @param currentState
-	 * @param action
-	 * @return
+	 * @param currentState An agent's current state
+	 * @param action The action taken at the agent's current state.
+	 * 
+	 * @return The agent's resulting state.
 	 */
 	public State getNewState(State currentState, Action action) {
 		State state = null;
 		int xCoor = currentState.getxCoor();
 		int yCoor = currentState.getyCoor();
 		switch (action) {
-		case NORTH:
-			yCoor--;
-			break;
-		case SOUTH:
-			yCoor++;
-			break;
-		case WEST:
-			xCoor--;
-			break;
-		case EAST:
-			xCoor++;
-			break;
+			case NORTH:
+				yCoor--;
+				break;
+			case SOUTH:
+				yCoor++;
+				break;
+			case WEST:
+				xCoor--;
+				break;
+			case EAST:
+				xCoor++;
+				break;
+			default:
+				return null;
 		}
 
 		for (Entry<State, List<Action>> entry : this.stateMap.entrySet()) {
@@ -97,9 +109,11 @@ public class Environment {
 	}
 
 	/**
+	 * Returns True if the state is a location of intrest, false otherwise.
 	 * 
-	 * @param state
-	 * @return
+	 * @param state The state being checked.
+	 * 
+	 * @return True if the state is a location of intrest, false otherwise.
 	 */
 	public boolean isLocationOfInterest(State state) {
 		boolean isLocationOfInterest = false;
@@ -110,9 +124,11 @@ public class Environment {
 	}
 
 	/**
+	 * Returns a list of possibe actions at a given state.
 	 * 
-	 * @param state
-	 * @return
+	 * @param state The given state.
+	 * 
+	 * @return a list of possibe actions.
 	 */
 	public List<Action> getPossibleActions(State state) {
 		if (this.stateMap.containsKey(state)) {

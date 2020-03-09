@@ -99,29 +99,6 @@ public class Agent {
 		return states;
 	}
 
-	public String getQValuesAsString(State state) {
-		String north = "";
-		String south = "";
-		String west = "";
-		String east = "";
-
-		for (Entry<Action, Double> entry : this.qTable.get(state).entrySet()) {
-			if (entry.getKey() == Action.NORTH) {
-				north = "North: " + entry.getValue();
-			}
-			if (entry.getKey() == Action.SOUTH) {
-				south = "South: " + entry.getValue();
-			}
-			if (entry.getKey() == Action.WEST) {
-				west = "West: " + entry.getValue();
-			}
-			if (entry.getKey() == Action.EAST) {
-				east = "East: " + entry.getValue();
-			}
-		}
-		
-		return "\t\t\t" + north + "\n\n" + west + " \t\t\t " + east + "\n\n\t\t\t" + south; 
-	}
 
 	private void initializeQTable() {
 		for (Entry<State, List<Action>> entry : this.environment.getStateMap().entrySet()) {

@@ -1,8 +1,10 @@
 package edu.westga.cs3270;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Scanner;
 
 import edu.westga.cs3270.model.Action;
 import edu.westga.cs3270.model.Agent;
@@ -27,67 +29,112 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-	/** The Constant RUN_MODE. */
-	private static final int RUN_MODE = 1;
-
 	/** The Constant EPISODE_COUNT. */
-	public static final int EPISODE_COUNT = 1000000;
+	private static int episodeCount = 1000000;
 
 	/** The epsilon. */
 	private static double epsilon = 0.0;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-
-		setHyperParameters();
-		String input = "8x4" + System.lineSeparator() + "0,0,-100,0,0,0,0,0" + System.lineSeparator()
-				+ "0,0,0,0,0,0,-150,0" + System.lineSeparator() + "0,-100,0,0,0,-120,0,0" + System.lineSeparator()
-				+ "Start,-100,-100,0,-100,-100,-100,LOI+100";
-		EnvironmentParser parser = new EnvironmentParser(input);
-		Environment env = new Environment(parser);
-
-
+		Scanner scan = new Scanner(System.in);
+		EnvironmentParser envParser = getFileMapFromInput(scan);
+		getHyperParametersFromInput(scan);
+		getEpisodeCountFromInput(scan);
+		scan.close();
+		Environment env = new Environment(envParser);
 		Agent agent = new Agent(env);
-		for (int i = 1; i < EPISODE_COUNT; i++) {
-
+		for (int i = 1; i < episodeCount; i++) {
 			agent.live();
-
 		}
-
 		GridPane grid = new GridPane();
 		grid.setPadding(new Insets(20, 20, 20, 20));
 		grid.setVgap(5);
 		grid.setHgap(8);
-		
-		
 		List<StackPane> stackList = new ArrayList<StackPane>();
-		
 		for (Entry<State, List<Action>> entry : env.getStateMap().entrySet()) {
 			StackPane stack = new StackPane();
-						
-			Text text = new Text(agent.getQValuesAsString(entry.getKey()));
+			Text text = new Text(Integer.toString(entry.getKey().getReward()));
 			text.setFill(Color.WHITE);
 			text.setTextAlignment(TextAlignment.CENTER);
-			
 			stackList.add(stack);
-			
 			stack.getChildren().addAll(makeRectangle(Color.BLACK), text);
 			GridPane.setConstraints(stack, entry.getKey().getxCoor(), entry.getKey().getyCoor());
 		}
-
 		grid.getChildren().addAll(stackList);
-
 		Scene scene = new Scene(grid);
 		primaryStage.setTitle("Test");
 		primaryStage.setScene(scene);
-
 		primaryStage.show();
-
-		
-
 		showBestPath(agent, stackList);
+	}
 
+	private static EnvironmentParser getFileMapFromInput(Scanner scan) {
+		boolean validFile = false;
 
+		EnvironmentParser envParser = null;
+		while (!validFile) {
+			System.out.print("Enter the file path to the CSV file: ");
+			String filePath = scan.next();
+			try {
+				envParser = new EnvironmentParser(new File(filePath));
+				validFile = true;
+			} catch (IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+
+			}
+		}
+		return envParser;
+	}
+
+	private static void getHyperParametersFromInput(Scanner scan) {
+		boolean validDouble = false;
+		System.out.println();
+		while (!validDouble) {
+			System.out.print("Enter an alpha value: ");
+			try {
+				Main.alpha = Double.parseDouble(scan.next());
+				validDouble = true;
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid Value");
+			}
+		}
+		validDouble = false;
+		System.out.println();
+		while (!validDouble) {
+			System.out.print("Enter an gamma value: ");
+			try {
+				Main.gamma = Double.parseDouble(scan.next());
+				validDouble = true;
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid Value");
+			}
+		}
+		validDouble = false;
+		System.out.println();
+		while (!validDouble) {
+			System.out.print("Enter an epsilon value: ");
+			try {
+				Main.epsilon = Double.parseDouble(scan.next());
+				validDouble = true;
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid Value");
+			}
+		}
+	}
+	
+	private static void getEpisodeCountFromInput(Scanner scan) {
+		boolean validInteger = false;
+		while (!validInteger) {
+			System.out.print("Enter an episode count: ");
+			try {
+				Main.episodeCount = Integer.parseInt(scan.next());
+				validInteger = true;
+
+			} catch (NumberFormatException e) {
+				System.out.println("Invalid Value");
+			}
+		}
 	}
 
 	private static void showBestPath(Agent agent, List<StackPane> stackList) {
@@ -96,8 +143,9 @@ public class Main extends Application {
 				if (GridPane.getColumnIndex(steck) == state.getxCoor()
 						&& GridPane.getRowIndex(steck) == state.getyCoor()) {
 					steck.getChildren().remove(1);
-					
-					steck.getChildren().addAll(makeRectangle(Color.YELLOW), new Text(agent.getQValuesAsString(state)));
+
+					steck.getChildren().addAll(makeRectangle(Color.YELLOW),
+							new Text(Integer.toString(state.getReward())));
 				}
 
 			}
@@ -105,44 +153,24 @@ public class Main extends Application {
 	}
 
 	private static Rectangle makeRectangle(Color color) {
-		Rectangle r = new Rectangle();
+		Rectangle rectangle = new Rectangle();
 
-		r.setWidth(250);
-		r.setHeight(150);
-		r.setArcWidth(20);
-		r.setArcHeight(20);
-		r.setFill(color);
-		return r;
+		rectangle.setWidth(50);
+		rectangle.setHeight(50);
+		rectangle.setArcWidth(20);
+		rectangle.setArcHeight(20);
+		rectangle.setFill(color);
+		return rectangle;
 	}
 
+	/**Main method
+	 * 
+	 * @param args command line args
+	 * @throws InterruptedException throws for jfx
+	 */
 	public static void main(String[] args) throws InterruptedException {
 		Main.launch(args);
 		System.exit(0);
-	}
-
-	private static void setHyperParameters() {
-		switch (RUN_MODE) {
-		case 1:
-			epsilon = 0.1;
-			gamma = 0.9;
-			alpha = 0.5;
-			break;
-		case 2:
-			epsilon = 1.0;
-			gamma = 0.9;
-			alpha = 0.5;
-			break;
-		case 3:
-			epsilon = 0.0;
-			gamma = 0.9;
-			alpha = 0.5;
-			break;
-		case 4:
-			epsilon = 0.1;
-			gamma = 0.2;
-			alpha = 0.7;
-			break;
-		}
 	}
 
 	/** The gamma. */

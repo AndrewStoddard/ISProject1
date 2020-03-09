@@ -19,6 +19,7 @@ public class State {
 	 *                 this.getYCoor()
 	 * @param xCoor the x coordinate of the state
 	 * @param yCoor the y coordinate of the state
+	 * @param reward the state
 	 */
 	public State(int xCoor, int yCoor, int reward) {
 		if (xCoor < 0) {
@@ -33,6 +34,11 @@ public class State {
 		this.reward = reward;
 	}
 
+	/**
+	 * Sets the reward.
+	 *
+	 * @param reward the new reward
+	 */
 	public void setReward(int reward) {
 		this.reward = reward;
 	}
@@ -60,9 +66,10 @@ public class State {
 	}
 
 	/**
+	 * Gets the reward
 	 * @return the reward
 	 */
 	public int getReward() {
-		return reward;
+		return this.reward;
 	}
 }

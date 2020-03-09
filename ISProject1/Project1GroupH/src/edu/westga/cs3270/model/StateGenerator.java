@@ -7,20 +7,25 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * The state generator class, generates potential states.
  * @author Group H
  *
  */
 public class StateGenerator {
+	
+	/** The states. */
 	private List<State> states;
+	
+	/** The parser. */
 	private EnvironmentParser parser;
 	
 	
 	/**
-	 * Constructs a state generator object
+	 * Constructs a state generator object.
+	 *
+	 * @param parser the parser object
 	 * @preconditions parser != null
 	 * @postconditions this.parser == parser
-	 * 
-	 * @param parser the parser object
 	 */
 	public StateGenerator(EnvironmentParser parser) {
 		if (parser == null) {
@@ -33,6 +38,12 @@ public class StateGenerator {
 	
 	}
 	
+	/**
+	 * Gets the Location of interest based on point2D.
+	 *
+	 * @param lois the lois
+	 * @return the LO is
+	 */
 	public Set<State> getLOIs(List<Point2D> lois) {
 		Set<State> locationsOfInterest = new HashSet<State>();
 		for (Point2D points : lois) {
@@ -46,6 +57,12 @@ public class StateGenerator {
 		
 	}
 	
+	/**
+	 * Gets the start state.
+	 *
+	 * @param startState the start state
+	 * @return the start state
+	 */
 	public State getStartState(Point2D startState) {
 		State result = null;
 		for (State state : this.states) {
@@ -57,19 +74,23 @@ public class StateGenerator {
 	}
 	
 	/**
-	 * Gets the states
+	 * Gets the states.
+	 *
+	 * @return the states
 	 * @preconditions none
 	 * @postconditions none
-	 * @return the states
 	 */
 	public List<State> getStates() {
 		return this.states;
 	}
 	
+	/**
+	 * Generate states.
+	 */
 	private void generateStates() {
 		int[][] map = this.parser.getMap();
 		for (int i = 0; i < this.parser.getMapWidth(); i++) {
-			for(int j = 0; j < this.parser.getMapHeight(); j++) {
+			for (int j = 0; j < this.parser.getMapHeight(); j++) {
 				State state = new State(i, j, map[i][j]);
 				this.states.add(state);
 				

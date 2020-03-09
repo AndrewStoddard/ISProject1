@@ -3,6 +3,7 @@ package edu.westga.cs3270;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -13,6 +14,7 @@ import edu.westga.cs3270.model.EnvironmentParser;
 import edu.westga.cs3270.model.State;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -34,6 +36,8 @@ public class Main extends Application {
 
 	/** The epsilon. */
 	private static double epsilon = 0.0;
+	
+	private static GridPane grid = new GridPane();
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -48,7 +52,9 @@ public class Main extends Application {
 			agent.live();
 		}
 		getAnswerTo1(agent, env);
-		GridPane grid = new GridPane();
+		grid.setOnMouseClicked((event) -> {
+			clickGrid(event, agent);
+		});
 		grid.setPadding(new Insets(20, 20, 20, 20));
 		grid.setVgap(5);
 		grid.setHgap(8);
@@ -169,6 +175,31 @@ public class Main extends Application {
 		rectangle.setArcHeight(20);
 		rectangle.setFill(color);
 		return rectangle;
+	}
+	
+	/**
+	 * Gets the qValues of Clicked Grid
+	 * @param event the click event
+	 * @param agent the agent
+	 */
+	public static void clickGrid(javafx.scene.input.MouseEvent event, Agent agent) {
+	    Node clickedNode = event.getPickResult().getIntersectedNode().getParent();
+	    Integer colIndex = 0;
+	    Integer rowIndex = 0;
+	    if (clickedNode != grid) {
+	        colIndex = GridPane.getColumnIndex(clickedNode);
+	        rowIndex = GridPane.getRowIndex(clickedNode);
+	        System.out.println("Mouse clicked cell: " + colIndex + " And: " + rowIndex);
+	    }
+	    for (Entry<State, Map<Action, Double>> entry : agent.getQTable().entrySet()) {
+	    	if (entry.getKey().getxCoor() == colIndex && entry.getKey().getyCoor() == rowIndex) {
+	    		for (Entry<Action, Double> entry2 : entry.getValue().entrySet()) {
+	    			System.out.println("State X: " + entry.getKey().getxCoor() + " | State Y: " + entry.getKey().getyCoor() + " | Actions: " + entry2);
+	    		}
+	    	}
+	    }
+	    	
+	    
 	}
 
 	/**Main method

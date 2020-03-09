@@ -25,6 +25,8 @@ public class Agent {
 	private Map<State, Map<Action, Double>> qTable;
 	private State currentState;
 	private int health;
+	private int move;
+	private Map<Integer, State> moveList;
 
 	/**
 	 * 
@@ -32,10 +34,12 @@ public class Agent {
 	 */
 	public Agent(Environment environment) {
 		this.environment = environment;
+		this.move = 1;
 		this.qTable = new HashMap<State, Map<Action, Double>>();
 		this.health = 50;
 		this.currentState = this.environment.getStartState();
-
+		this.moveList = new HashMap<Integer, State>();
+		this.moveList.put(this.move, this.currentState);
 		this.initializeQTable();
 	}
 
@@ -44,12 +48,16 @@ public class Agent {
 	 * 
 	 */
 	public void live() {
-
+		this.moveList = new HashMap<Integer, State>();
+		this.move = 1;
 		this.currentState = this.environment.getStartState();
+		this.moveList.put(this.move, this.currentState);
 		this.health = 50;
 
 		while (true) {
 			this.move();
+			this.move++;
+			this.moveList.put(this.move, this.currentState);
 			if (this.environment.isLocationOfInterest(this.currentState)) {
 				break;
 			}
@@ -66,6 +74,10 @@ public class Agent {
 	 */
 	public Map<State, Map<Action, Double>> getQTable() {
 		return this.qTable;
+	}
+	
+	public Map<Integer, State> getMoveList() {
+		return this.moveList;
 	}
 
 	public List<State> getBestPath() {

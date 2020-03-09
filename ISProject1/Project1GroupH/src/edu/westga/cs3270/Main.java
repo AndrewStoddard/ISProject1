@@ -2,7 +2,9 @@ package edu.westga.cs3270;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
@@ -30,7 +32,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	/** The Constant EPISODE_COUNT. */
-	private static int episodeCount = 1000000;
+	private static int episodeCount = 0;
 
 	/** The epsilon. */
 	private static double epsilon = 0.0;
@@ -44,9 +46,10 @@ public class Main extends Application {
 		scan.close();
 		Environment env = new Environment(envParser);
 		Agent agent = new Agent(env);
-		for (int i = 1; i < episodeCount; i++) {
+		for (int i = 0; i < episodeCount; i++) {
 			agent.live();
 		}
+		getAnswerTo1(agent, env);
 		GridPane grid = new GridPane();
 		grid.setPadding(new Insets(20, 20, 20, 20));
 		grid.setVgap(5);
@@ -63,12 +66,19 @@ public class Main extends Application {
 		}
 		grid.getChildren().addAll(stackList);
 		Scene scene = new Scene(grid);
-		primaryStage.setTitle("Test");
+		primaryStage.setTitle("Best Path After " + Main.episodeCount + "episodes");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		showBestPath(agent, stackList);
 	}
-
+	
+	private static void getAnswerTo1(Agent agent, Environment env) {
+		for (Entry<Integer, State> entry : agent.getMoveList().entrySet()) {
+			System.out.println(entry.getKey() + " : " + entry.getValue().getxCoor() + " : " + entry.getValue().getyCoor());
+		}
+		System.out.println("Q Value for North of Start: " + agent.getQTable().get(env.getStartState()).get(Action.NORTH));
+	}
+	
 	private static EnvironmentParser getFileMapFromInput(Scanner scan) {
 		boolean validFile = false;
 
